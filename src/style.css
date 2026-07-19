@@ -1,16 +1,17 @@
+/* deliberately plain for now - real visual design (per the arcane/mana palette we
+   sketched for the mod-side fallback page) is next round, once the layout is settled */
+
 :root {
 	font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 	line-height: 1.5;
 	font-weight: 400;
+	color-scheme: dark;
+	color: #e7e7ea;
+	background-color: #17161b;
+}
 
-	color: #222;
-	background-color: #ffffff;
-
-	font-synthesis: none;
-	text-rendering: optimizeLegibility;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	-webkit-text-size-adjust: 100%;
+* {
+	box-sizing: border-box;
 }
 
 body {
@@ -20,51 +21,43 @@ body {
 #app {
 	display: flex;
 	flex-direction: column;
-	min-height: 100vh;
+	height: 100vh;
 }
 
 header {
+	flex: 0 0 auto;
 	display: flex;
-	justify-content: flex-end;
-	background-color: #673ab8;
+	align-items: center;
+	justify-content: space-between;
+	padding: 8px 14px;
+	background-color: #232128;
+	border-bottom: 1px solid #333;
 }
 
-header nav {
-	display: flex;
+header .brand {
+	font-size: 13px;
+	letter-spacing: 0.03em;
 }
 
-header a {
-	color: #fff;
-	padding: 0.75rem;
-	text-decoration: none;
+header .status {
+	font-size: 11px;
+	padding: 2px 8px;
+	border-radius: 999px;
+	background: #3a3a42;
 }
 
-header a.active {
-	background-color: #0005;
+header .status-connected {
+	background: #1f4a33;
+	color: #7ee2a8;
 }
 
-header a:hover {
-	background-color: #0008;
+header .status-error {
+	background: #4a1f24;
+	color: #e2807e;
 }
 
 main {
-	flex: auto;
+	flex: 1;
+	min-height: 0;
 	display: flex;
-	align-items: center;
-	max-width: 1280px;
-	margin: 0 auto;
-	text-align: center;
-}
-
-@media (max-width: 639px) {
-	main {
-		margin: 2rem;
-	}
-}
-
-@media (prefers-color-scheme: dark) {
-	:root {
-		color: #ccc;
-		background-color: #1a1a1a;
-	}
 }

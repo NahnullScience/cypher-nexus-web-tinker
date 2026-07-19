@@ -1,18 +1,21 @@
-import { useLocation } from 'preact-iso';
+import { connectionError, connectionStatus } from '../state/deck';
+
+const STATUS_LABEL: Record<string, string> = {
+	idle: 'idle',
+	connecting: 'connecting…',
+	connected: 'connected',
+	error: 'not connected',
+};
 
 export function Header() {
-	const { url } = useLocation();
+	const status = connectionStatus.value;
 
 	return (
 		<header>
-			<nav>
-				<a href="/" class={url == '/' && 'active'}>
-					Home
-				</a>
-				<a href="/404" class={url == '/404' && 'active'}>
-					404
-				</a>
-			</nav>
+			<span class="brand">cypher_nexus :: web tinker</span>
+			<span class={`status status-${status}`} title={connectionError.value ?? undefined}>
+				{STATUS_LABEL[status]}
+			</span>
 		</header>
 	);
 }

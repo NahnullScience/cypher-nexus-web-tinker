@@ -1,9 +1,5 @@
-import './style.css';
+import { TinkerLayout } from '../../components/layout/TinkerLayout';
 
 export function Home() {
-	return (
-		<div class="home">
-			
-		</div>
-	);
+	return <TinkerLayout />;
 }
