@@ -6,8 +6,11 @@
 
 .library-header {
 	display: flex;
-	flex-direction: column;
-	gap: 2px;
+	flex-direction: row;
+    gap: 20px;
+    align-items: baseline;
+    justify-content: space-between;
+	padding-left: 6px;
 }
 
 .library-categories {
@@ -47,8 +50,8 @@
 /* Square Card */
 .cypher-card {
 	position: relative;
-	width: 56px;
-	height: 56px;
+	width: 46px;
+	height: 46px;
 	box-sizing: border-box;
 	display: flex;
 	align-items: center;
