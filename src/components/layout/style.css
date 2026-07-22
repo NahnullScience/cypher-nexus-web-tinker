@@ -2,7 +2,7 @@
    wand editor sits top-right (short), call tree fills the rest (tall) */
 .tinker-layout {
 	display: grid;
-	grid-template-columns: 280px 1fr;
+	grid-template-columns: 380px 1fr;
 	grid-template-rows: auto 1fr;
 	gap: 12px;
 	flex: 1;

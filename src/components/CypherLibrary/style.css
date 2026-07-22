@@ -1,18 +1,115 @@
-.library-list {
-	list-style: none;
-	margin: 0;
-	padding: 0;
-	font-size: 13px;
+.library {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.library-header {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	.placeholder {
+		margin-block-start: 0;
+	}
+}
+
+.category-tabs {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px;
+}
+
+.category-tab {
+	background: rgba(255, 255, 255, 0.05);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	color: #a0a0aa;
+	font-size: 11px;
+	padding: 3px 8px;
+	border-radius: 4px;
+	cursor: pointer;
+	transition: all 0.15s ease;
+}
+
+.category-tab:hover {
+	background: rgba(255, 255, 255, 0.12);
+	color: #ffffff;
+}
+
+.category-tab.active {
+	background: rgba(255, 255, 255, 0.2);
+	border-color: rgba(255, 255, 255, 0.4);
+	color: #ffffff;
+	font-weight: 600;
+}
+
+/* Responsive Grid Layout */
+.library-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+	gap: 8px;
+	overflow-y: auto;
+	padding-right: 2px;
+}
+
+/* Draggable Rectangle Card */
+.cypher-card {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	background: #201f26;
+	border: 1px solid #33313d;
+	border-left: 4px solid var(--category-color, #666);
+	border-radius: 6px;
+	padding: 8px;
+	min-height: 70px;
+	cursor: grab;
+	user-select: none;
+	transition: transform 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.cypher-card:hover {
+	transform: translateY(-2px);
+	border-color: #555166;
+	background: #282632;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+}
+
+.cypher-card:active,
+.cypher-card.is-dragging {
+	cursor: grabbing;
+	opacity: 0.5;
+	transform: scale(0.96);
+}
+
+.cypher-card-header {
 	display: flex;
 	flex-direction: column;
 	gap: 2px;
 }
 
-.library-list li {
-	padding: 2px 4px;
-	border-radius: 4px;
+.cypher-card-title {
+	font-size: 12px;
+	font-weight: 600;
+	color: #ececf0;
+	line-height: 1.25;
+	word-break: break-word;
 }
 
-.library-list li:hover {
-	background: rgba(255, 255, 255, 0.08);
+.cypher-card-category {
+	font-size: 9px;
+	color: #888596;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+}
+
+.cypher-card-stats {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 10px;
+	color: #a09dae;
+	margin-top: 6px;
+	border-top: 1px solid rgba(255, 255, 255, 0.06);
+	padding-top: 4px;
 }

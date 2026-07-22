@@ -7,15 +7,17 @@ import { Home } from './pages/Home';
 import { NotFound } from './pages/_404';
 import './style.css';
 
+const BASE_PATH = import.meta.env.BASE_URL;
+
 bootstrap();
 
 export function App() {
 	return (
-		<LocationProvider>
+		<LocationProvider scope={BASE_PATH}>
 			<Header />
 			<main>
 				<Router>
-					<Route path="/" component={Home} />
+					<Route path={BASE_PATH} component={Home} />
 					<Route default component={NotFound} />
 				</Router>
 			</main>
