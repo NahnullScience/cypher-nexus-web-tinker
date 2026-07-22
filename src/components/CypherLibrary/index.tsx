@@ -1,7 +1,6 @@
-import { useState } from 'preact/hooks';
 import { DragDropProvider, useDraggable } from '@dnd-kit/react';
-import { addToDeck, categories, palette } from '../../state/deck';
-import type { AstCypherRef } from '../../types/ast';
+import { addToDeck, palette } from '../../state/deck';
+import type { AstCypherRef, AstPaletteEntry } from '../../types/ast';
 import './style.css';
 
 /** Converts 32-bit ARGB integer (from CypherCategory.color) into CSS rgba(...) string */
@@ -20,9 +19,8 @@ interface CypherCardProps {
 	onClick?: (cypher: AstCypherRef) => void;
 }
 
-/** Individual draggable rectangle representing a single Cypher */
+/** 60x60 square draggable card with cypher_bg.png frame */
 function CypherCard({ cypher, onCypherDragStart, onClick }: CypherCardProps) {
-	// Register with @dnd-kit/react
 	const { ref, isDragging } = useDraggable({
 		id: cypher.id,
 		data: { cypher },
@@ -48,14 +46,9 @@ function CypherCard({ cypher, onCypherDragStart, onClick }: CypherCardProps) {
 			style={{ '--category-color': categoryColor }}
 			title={`${cypher.label} (${cypher.category})`}
 		>
-			<div class="cypher-card-header">
-				<span class="cypher-card-title">{cypher.label}</span>
-				<span class="cypher-card-category">{cypher.category}</span>
-			</div>
-			<div class="cypher-card-stats">
-				<span title="Mana Drain">⚡ {cypher.manaDrain}</span>
-				{cypher.draw > 0 && <span title="Draw">🎴 {cypher.draw}</span>}
-				{cypher.delay > 0 && <span title="Delay">⏱ {cypher.delay}</span>}
+			{/* Square content container - image goes here once accessible */}
+			<div class="cypher-card-content">
+				<span class="cypher-card-label">{cypher.label}</span>
 			</div>
 		</div>
 	);
@@ -67,13 +60,15 @@ interface CypherLibraryProps {
 }
 
 export function CypherLibrary({ onCypherDragStart }: CypherLibraryProps) {
-	const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+	const visibleEntries = palette.value.filter((entry) => !entry.hidden);
 
-	const visibleEntries = palette.value.filter((entry) => {
-		if (entry.hidden) return false;
-		if (selectedCategory && entry.cypher.category !== selectedCategory) return false;
-		return true;
-	});
+	// Group palette entries by category to display each on a new line
+	const groupedCategories = visibleEntries.reduce<Record<string, AstPaletteEntry[]>>((acc, entry) => {
+		const cat = entry.cypher.category || 'General';
+		if (!acc[cat]) acc[cat] = [];
+		acc[cat].push(entry);
+		return acc;
+	}, {});
 
 	const handleDragStart = (event: Parameters<NonNullable<React.ComponentProps<typeof DragDropProvider>['onDragStart']>>[0]) => {
 		const cypher = event.operation.source?.data?.cypher as AstCypherRef | undefined;
@@ -87,41 +82,24 @@ export function CypherLibrary({ onCypherDragStart }: CypherLibraryProps) {
 			<section class="panel library">
 				<div class="library-header">
 					<h2>Cyphers Library</h2>
-					<p class="placeholder">
-						{palette.value.length} cyphers across {categories.value.length} categories
-					</p>
+					<p class="placeholder">{visibleEntries.length} cyphers available</p>
 				</div>
 
-				{/* Category Filter Tabs */}
-				<div class="category-tabs">
-					<button
-						type="button"
-						class={`category-tab ${selectedCategory === null ? 'active' : ''}`}
-						onClick={() => setSelectedCategory(null)}
-					>
-						All
-					</button>
-					{categories.value.map((cat) => (
-						<button
-							key={cat}
-							type="button"
-							class={`category-tab ${selectedCategory === cat ? 'active' : ''}`}
-							onClick={() => setSelectedCategory(cat)}
-						>
-							{cat}
-						</button>
-					))}
-				</div>
-
-				{/* Grid Layout of Cyphers */}
-				<div class="library-grid">
-					{visibleEntries.map((entry) => (
-						<CypherCard
-							key={entry.cypher.id}
-							cypher={entry.cypher}
-							onCypherDragStart={onCypherDragStart}
-							onClick={(cypher) => addToDeck(cypher)}
-						/>
+				<div class="library-categories">
+					{Object.entries(groupedCategories).map(([category, entries]) => (
+						<div key={category} class="category-group">
+							<div class="category-title">{category}</div>
+							<div class="category-grid">
+								{entries.map((entry) => (
+									<CypherCard
+										key={entry.cypher.id}
+										cypher={entry.cypher}
+										onCypherDragStart={onCypherDragStart}
+										onClick={(cypher) => addToDeck(cypher)}
+									/>
+								))}
+							</div>
+						</div>
 					))}
 				</div>
 			</section>
