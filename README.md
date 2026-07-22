@@ -5,7 +5,7 @@ A standalone web tool for building cypher chains and inspecting how the
 resolves them - the browser-side half of the mod's devtools split described in that
 repo. This project never talks to any game state directly; it only ever talks to a
 small local HTTP API (`AstExporter` / `DevToolsServer`) that the mod starts on demand
-via `/nexus_server start`.
+via `/cypher_nexus test_server start`.
 
 Ships to GitHub Pages as a plain static site. Nothing here is aware of Minecraft,
 Kotlin, or the mod's build - the only contract between the two projects is the JSON

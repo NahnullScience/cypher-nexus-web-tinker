@@ -5,6 +5,7 @@ const STATUS_LABEL: Record<string, string> = {
 	connecting: 'connecting…',
 	connected: 'connected',
 	error: 'not connected',
+	'version-mismatch': 'version mismatch',
 };
 
 export function Header() {

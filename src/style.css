@@ -56,6 +56,11 @@ header .status-error {
 	color: #e2807e;
 }
 
+header .status-version-mismatch {
+	background: #4a3a1f;
+	color: #e2c07e;
+}
+
 main {
 	flex: 1;
 	min-height: 0;

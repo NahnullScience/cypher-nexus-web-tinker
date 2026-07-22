@@ -1,10 +1,13 @@
 import { computed, signal } from '@preact/signals';
-import type { AstChunk, AstCypherRef, AstPaletteEntry } from '../types/ast';
+import type { AstApiMeta, AstChunk, AstCypherRef, AstPaletteEntry } from '../types/ast';
 
-export type ConnectionStatus = 'idle' | 'connecting' | 'connected' | 'error';
+export type ConnectionStatus = 'idle' | 'connecting' | 'connected' | 'error' | 'version-mismatch';
 
 /** everything the registry currently has (see AstExporter.palette() on the mod side) */
 export const palette = signal<AstPaletteEntry[]>([]);
+
+/** result of GET /api/meta - null until bootstrap() resolves it */
+export const apiMeta = signal<AstApiMeta | null>(null);
 
 /** the cyphers currently placed in the wand editor, in slot order */
 export const deck = signal<AstCypherRef[]>([]);
