@@ -19,7 +19,6 @@ interface CypherCardProps {
 	onClick?: (cypher: AstCypherRef) => void;
 }
 
-/** 60x60 square draggable card with cypher_bg.png frame */
 function CypherCard({ cypher, onCypherDragStart, onClick }: CypherCardProps) {
 	const { ref, isDragging } = useDraggable({
 		id: cypher.id,
@@ -46,7 +45,6 @@ function CypherCard({ cypher, onCypherDragStart, onClick }: CypherCardProps) {
 			style={{ '--category-color': categoryColor }}
 			title={`${cypher.label} (${cypher.category})`}
 		>
-			{/* Square content container - image goes here once accessible */}
 			<div class="cypher-card-content">
 				<span class="cypher-card-label">{cypher.label}</span>
 			</div>
@@ -55,14 +53,13 @@ function CypherCard({ cypher, onCypherDragStart, onClick }: CypherCardProps) {
 }
 
 interface CypherLibraryProps {
-	/** Event triggered when a cypher drag operation starts */
 	onCypherDragStart?: (cypher: AstCypherRef) => void;
 }
 
 export function CypherLibrary({ onCypherDragStart }: CypherLibraryProps) {
 	const visibleEntries = palette.value.filter((entry) => !entry.hidden);
 
-	// Group palette entries by category to display each on a new line
+	// Group palette entries by category
 	const groupedCategories = visibleEntries.reduce<Record<string, AstPaletteEntry[]>>((acc, entry) => {
 		const cat = entry.cypher.category || 'General';
 		if (!acc[cat]) acc[cat] = [];
