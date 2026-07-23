@@ -16,6 +16,8 @@ export function getSlotElement(index: number): HTMLElement | undefined {
 	return slotElements.get(index);
 }
 
+const flyAnimationDuration = 260
+
 /**
  * Purely cosmetic: clones `fromEl`, animates the clone from its current screen position to
  * `toEl`'s, then removes it. Deliberately never touches deck state - callers update state
@@ -37,9 +39,12 @@ export function flyToSlot(fromEl: HTMLElement, toEl: HTMLElement) {
 		margin: '0',
 		pointerEvents: 'none',
 		zIndex: '9999',
-		transition: 'transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity 260ms ease',
+		transition: `transform ${flyAnimationDuration}ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity ${flyAnimationDuration}ms ease`,
 	});
 	document.body.appendChild(ghost);
+
+	// Force a reflow so the browser commits the initial layout frame before applying transforms
+	void ghost.offsetWidth;
 
 	const dx = toRect.left + toRect.width / 2 - (fromRect.left + fromRect.width / 2);
 	const dy = toRect.top + toRect.height / 2 - (fromRect.top + fromRect.height / 2);
@@ -50,5 +55,18 @@ export function flyToSlot(fromEl: HTMLElement, toEl: HTMLElement) {
 		ghost.style.opacity = '0.35';
 	});
 
-	ghost.addEventListener('transitionend', () => ghost.remove(), { once: true });
+	let cleanedUp = false;
+	const cleanup = () => {
+		if (!cleanedUp) {
+			cleanedUp = true;
+			ghost.remove();
+		}
+	};
+
+	// Clean up on transition completion or cancellation
+	ghost.addEventListener('transitionend', cleanup, { once: true });
+	ghost.addEventListener('transitioncancel', cleanup, { once: true });
+
+	// Safety fallback timeout (animation duration 260ms + safety buffer)
+	setTimeout(cleanup, flyAnimationDuration + 100);
 }
