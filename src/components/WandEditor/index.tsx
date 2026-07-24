@@ -1,8 +1,8 @@
 import { useDroppable } from '@dnd-kit/react';
 import { useState } from 'preact/hooks';
-import { compileAst } from '../../lib/api';
+import { compileCallChain } from '../../lib/api';
 import { registerSlotElement } from '../../lib/flyAnimation';
-import { clearDeck, clearSlot, compiledResult, deck, EMPTY_CYPHER_ID, setDeckSize } from '../../state/deck';
+import { callChain, callChainError, clearDeck, clearSlot, deck, EMPTY_CYPHER_ID, setDeckSize } from '../../state/deck';
 import { CypherCard, EmptyCypherSlot } from '../CypherCard';
 import './style.css';
 
@@ -49,7 +49,13 @@ export function WandEditor() {
 	}
 
 	async function onCompile() {
-		compiledResult.value = await compileAst(deck.value.map((c) => c?.id ?? EMPTY_CYPHER_ID));
+		callChainError.value = null;
+		try {
+			callChain.value = await compileCallChain(deck.value.map((c) => c?.id ?? EMPTY_CYPHER_ID));
+		} catch (err) {
+			callChain.value = null;
+			callChainError.value = err instanceof Error ? err.message : String(err);
+		}
 	}
 
 	return (

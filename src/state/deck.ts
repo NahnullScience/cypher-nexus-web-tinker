@@ -1,5 +1,5 @@
 import { computed, signal } from '@preact/signals';
-import type { AstApiMeta, AstChunk, AstCypherRef, AstPaletteEntry } from '../types/ast';
+import type { AstApiMeta, AstCallNode, AstChunk, AstCypherRef, AstPaletteEntry } from '../types/ast';
 
 export type ConnectionStatus = 'idle' | 'connecting' | 'connected' | 'error' | 'version-mismatch';
 
@@ -25,6 +25,10 @@ export const deck = signal<DeckSlot[]>(Array<DeckSlot>(DEFAULT_DECK_SIZE).fill(n
 
 /** last compiled result from POST /api/ast, null until the player hits "compile" */
 export const compiledResult = signal<AstChunk | null>(null);
+
+/** last call chain from POST /api/call-chain - what the CallTree panel actually renders */
+export const callChain = signal<AstCallNode[] | null>(null);
+export const callChainError = signal<string | null>(null);
 
 export const connectionStatus = signal<ConnectionStatus>('idle');
 export const connectionError = signal<string | null>(null);
@@ -80,4 +84,6 @@ export function flyToFirstEmptySlot(cypher: AstCypherRef): number {
 export function clearDeck() {
 	deck.value = deck.value.map(() => null);
 	compiledResult.value = null;
+	callChain.value = null;
+	callChainError.value = null;
 }

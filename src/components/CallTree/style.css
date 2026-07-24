@@ -1,6 +1,117 @@
-.tree-json {
-	margin: 0;
+.tree {
+	overflow: auto;
+}
+
+.ct-error {
+	color: #e2807e;
+}
+
+/* multiple independent roots (rare today - the mod always compiles with a single initial
+   draw right now - but the shape is a forest, not one tree, so render it as one) */
+.ct-forest {
+	display: flex;
+	flex-direction: column;
+	gap: 28px;
+	padding: 4px;
+}
+
+/* One call: its own box, then a column of children hanging off the right of it.
+   This row/column alternation, recursively, is the entire layout algorithm. */
+.ct-node {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+.ct-box {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	flex: 0 0 auto;
+	padding: 6px 10px;
+	border: 1px solid #3a3742;
+	border-radius: 10px;
+	background: #211f28;
+	white-space: nowrap;
+}
+
+.ct-box.is-copy {
+	border-style: dashed;
+	border-color: #6b5a3a;
+}
+
+/* placeholder for a cypher icon later - kept as its own element/class specifically so
+   swapping <span class="ct-icon" /> for <img class="ct-icon" src={iconUrl(...)} /> is a
+   one-line change with no layout fallout */
+.ct-icon {
+	width: 14px;
+	height: 14px;
+	flex: 0 0 auto;
+	background: #ffffff;
+	border-radius: 3px;
+}
+
+.ct-label {
 	font-size: 12px;
-	white-space: pre-wrap;
-	word-break: break-word;
+}
+
+.ct-copy-badge {
+	font-size: 9px;
+	padding: 1px 5px;
+	border-radius: 999px;
+	background: #4a3a1f;
+	color: #e2c07e;
+}
+
+/* the column of children for one node - each gets its own connector via .ct-child */
+.ct-children {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+/* one child slot: draws the horizontal stub from the spine to its node, and its own
+   segment of the vertical spine. The spine is built from these segments, not one line
+   across the whole column, so it works regardless of how tall siblings are. */
+.ct-child {
+	position: relative;
+	display: flex;
+	align-items: center;
+	padding: 6px 0;
+	margin-left: 24px;
+}
+
+.ct-child::before {
+	/* horizontal stub: spine -> this node */
+	content: '';
+	position: absolute;
+	left: -24px;
+	top: 50%;
+	width: 24px;
+	border-top: 1px solid #4a4756;
+}
+
+.ct-child::after {
+	/* this child's segment of the vertical spine */
+	content: '';
+	position: absolute;
+	left: -24px;
+	top: 0;
+	bottom: 0;
+	border-left: 1px solid #4a4756;
+}
+
+/* first child: nothing above it to connect to - spine starts at this node's own center */
+.ct-child:first-child::after {
+	top: 50%;
+}
+
+/* last child: nothing below it - spine ends at this node's own center */
+.ct-child:last-child::after {
+	bottom: 50%;
+}
+
+/* only child: no siblings to form a spine with at all, the stub alone is enough */
+.ct-child:only-child::after {
+	display: none;
 }
